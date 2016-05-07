@@ -7,7 +7,7 @@ const {
     Text,
 } = React;
 
-import TaskRow from './TaskRow';
+import TaskRow from './TaskRow/Component';
 
 const styles = React.StyleSheet.create({
     container: {
@@ -42,15 +42,26 @@ class TaskList extends React.Component {
       dataSource: ds.cloneWithRows(props.todos),
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    const dataSource = this
+      .state
+      .dataSource
+      .cloneWithRows(nextProps.todos);
+
+      this.setState({ dataSource });
+  }
+
   renderRow(todo) {
     return (
-      <TaskRow todo={todo} />
+      <TaskRow todo={todo} onDone={this.props.onDone} />
     );
   }
+
   render() {
     return (
       <View style={styles.container}>
-        <ListView dataSource={this.state.dataSource} renderRow={this.renderRow}>
+        <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)}>
               Hi there from TaskList!
         </ListView>
         <TouchableHighlight style={styles.button} onPress={this.props.onAddStarted}>
@@ -62,6 +73,7 @@ class TaskList extends React.Component {
 }
 
 TaskList.propTypes = {
+  onDone: React.PropTypes.func.isRequired,
   onAddStarted: React.PropTypes.func.isRequired,
   todos: React.PropTypes
     .arrayOf(React.PropTypes.object).isRequired,

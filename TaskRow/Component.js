@@ -1,9 +1,5 @@
 import React from 'react-native';
-
-const {
-    Text,
-    View,
-} = React;
+import Render from './Render';
 
 const styles = React.StyleSheet.create({
    container: {
@@ -20,21 +16,28 @@ const styles = React.StyleSheet.create({
    },
    label: {
      fontSize: 20,
-     fontWeight: '300',  
+     fontWeight: '300',
+   },
+   doneButton: {
+       borderRadius: 5,
+       backgroundColor: '#EAEAEA',
+       padding: 5,
    },
 });
 
 class TaskRow extends React.Component {
+
+    onDonePressed() {
+        this.props.onDone(this.props.todo);
+    }
+
     render() {
-        return (
-          <View style={styles.container}>
-            <Text style={styles.label}>{this.props.todo.task}</Text>
-          </View>
-        );
+      return Render.bind(this)(styles);
     }
 }
 
 TaskRow.propTypes = {
+    onDone: React.PropTypes.func.isRequired,
     todo: React.PropTypes.shape({
         task: React.PropTypes.string.isRequired,
     }).isRequired,
