@@ -4,20 +4,16 @@ import React, {
 } from 'react-native';
 import TaskList from './TaskList';
 import TaskForm from './TaskForm';
+import store from './todoStore';
 
 class PluralTodo extends Component {
     constructor(props, context) {
         super(props, context);
-        this.state = {
-          todos: [
-            {
-                task: 'Learn React Native',
-            },
-            {
-                task: 'Learn React',
-            },
-        ],
-      };
+        this.state = store.getState();
+
+        store.subscribe(() => {
+          this.setState(store.getState());
+        })
     }
 
     onDone(todo) {
@@ -36,9 +32,13 @@ class PluralTodo extends Component {
         this.nav.pop();
     }
 
-    onAdd(todo) {
-        this.state.todos.push({ task: todo });
-        this.setState({ todos: this.state.todos });
+    onAdd(task) {
+        // this.state.todos.push({ task });
+        // this.setState({ todos: this.state.todos });
+        store.dispatch({
+          type: "ADD_TODO",
+          task,
+        })
         this.nav.pop();
     }
 
